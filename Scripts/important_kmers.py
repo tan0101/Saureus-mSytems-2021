@@ -10,6 +10,7 @@ import pandas as pd
 import sys
 import os
 import math
+import pickle
 
 from sklearn.feature_selection import SelectFpr, SelectFdr, chi2, SelectKBest, SelectFwe, SelectFromModel
 from collections import Counter
@@ -100,6 +101,7 @@ if __name__ == "__main__":
 
         if method == "kBest":
             sel = SelectKBest(chi2, k=2000).fit(data_txt[idx,:], target)
+            data = sel.transform(data)
             scores = sel.scores_
             pvalue = sel.pvalues_
             scores[np.isnan(pvalue)] = 0
@@ -110,9 +112,13 @@ if __name__ == "__main__":
             results_array[:,0] = cols
             results_array[:,1] = scores[cols]
             results_array[:,2] = pvalue[cols]
+            
+            with open(folder+"/"+results_folder+"/data_"+method+"_"+name_dataset+"_"+name_antibiotic+'.pickle', 'wb') as f:
+                pickle.dump(data, f)
         
         np.savetxt(results_folder+"/features_"+method+"_"+name_dataset+'_'+name_antibiotic+'.txt', cols, fmt='%d')
+        
+        results_df = pd.DataFrame(results_array, columns = ['Index','Score','Pvalue'])
+        results_df.to_csv(results_folder+"/"+name_dataset+"_"+name_antibiotic+"_"+method+"_pvalue.csv",index=False)
             
-        np.savetxt(results_folder+"/"+name_dataset+"_"+name_antibiotic+"_"+method+"_pvalue.csv", results_array, delimiter=",")
-
         del results_array, cols, pvalue, scores
