@@ -153,23 +153,19 @@ if __name__ == "__main__":
         if count_class[0] < 12 or count_class[1] < 12:
             continue
 
-        # Load features information
-        features_df = pd.read_csv(results_folder+"/"+name_dataset+"_"+name_antibiotic+"_"+method+"_pvalue.csv", header = None)
-        n_features = features_df.shape[0]
+        # Load kmers data
+        file_name = folder+"/"+results_folder+"/data_"+method+"_"+name_dataset+"_"+name_antibiotic+'.pickle'
+        my_file = Path(file_name)
 
-        print("Number of features = {}".format(n_features))
+        try:
+            my_abs_path = my_file.resolve(strict=True)
+        except FileNotFoundError:
+            continue
+        else:
+            with open(file_name, 'rb') as f:
+                data = pickle.load(f)
 
-        features_data = np.array(features_df.loc[:,features_df.columns[0]]).astype(int)
-
-        # Load kmers based on the chi-square test results
-        data = np.zeros((n_lines,n_features))
-        update_progress(0)
-        for n, line in enumerate(open(name_dataset+'_Kmer_data.txt','r')):
-            dummy = np.array(line.split(delimiter), dtype=float)
-            data[n,:] = dummy[features_data]
-            update_progress((n+1)/n_lines)
-
-        data = data[idx,:]
+        print(data.shape)
 
         # Standardize data: zero mean and unit variance
         scaler = StandardScaler()
