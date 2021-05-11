@@ -7,3 +7,4 @@ Three scripts are available:
 
 1. important_kmers.py -> find the top 2000 k-mers based on the pvalue of the Chi-square test from a k-mers dataset for each antibitioc studied.
 2. classification_kmers.py -> measures the performance of 10 different classifiers using a nested cross-validation with the dataset acquired from important_kmers.py
+3. clustermap_kmers.py -> create a clustermap with Seaborn Package based on the data acquired from important_kmers.py
