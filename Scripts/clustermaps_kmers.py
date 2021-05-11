@@ -86,7 +86,7 @@ if __name__ == "__main__":
         if count_class[0] < 12 or count_class[1] < 12:
             continue
 
-        file_name = folder+"/"+results_folder+"/data_2000_"+name_dataset+"_"+name_antibiotic+'.pickle'
+        file_name = folder+"/"+results_folder+"/data_"+method+"_"+name_dataset+"_"+name_antibiotic+'.pickle'
         my_file = Path(file_name)
 
         try:
